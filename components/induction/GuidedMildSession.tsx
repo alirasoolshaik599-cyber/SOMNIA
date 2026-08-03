@@ -16,7 +16,7 @@ export default function GuidedMildSession({ phraseText, onComplete }: GuidedMild
       steps={guidedSessionSteps}
       backHref="/induction/mild"
       backLabel="Back to MILD"
-      onComplete={onComplete}
+      onComplete={({ readiness, notes }) => onComplete({ readiness: readiness ?? "Ready", notes })}
       renderStepExtra={(stepId) => {
         if (stepId === "recall") {
           return (
