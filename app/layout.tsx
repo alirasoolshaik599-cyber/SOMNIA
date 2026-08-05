@@ -4,6 +4,7 @@ import "./globals.css";
 
 import GlobalNav from "@/components/layout/GlobalNav";
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import GlobalAuthModal from "@/components/providers/GlobalAuthModal";
 
 const geistSans = Geist({
@@ -109,6 +110,8 @@ export default function RootLayout({
           <GlobalAuthModal />
           {children}
         </AuthProvider>
+      
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
       </body>
     </html>
   );
