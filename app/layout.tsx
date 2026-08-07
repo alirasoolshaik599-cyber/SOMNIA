@@ -27,11 +27,11 @@ export const metadata: Metadata = {
 
   description:
     "Master lucid dreaming with SOMNIA. Record dreams, improve dream recall, practice reality checks, track sleep, and build awareness through structured training.",
-  
+
   verification: {
-    google:"S3Z8xHHYhW0mepsG_oSOZVM5SUHgEvIwul21uUCy3GE",
-  },  
-  
+    google: "S3Z8xHHYhW0mepsG_oSOZVM5SUHgEvIwul21uUCy3GE",
+  },
+
   keywords: [
     "lucid dreaming",
     "dream journal",
@@ -52,12 +52,14 @@ export const metadata: Metadata = {
 
   icons: {
     icon: "/favicon.ico",
+    apple: "/apple-icon.png",
   },
 
   openGraph: {
     title: "SOMNIA | Lucid Dreaming Training Platform",
+
     description:
-      "Record dreams, improve awareness, practice lucid dreaming techniques, and unlock your subconscious.",
+      "Master lucid dreaming. Record dreams, improve dream recall, practice reality checks, and unlock your subconscious.",
 
     url: "https://somnia-delta-five.vercel.app",
 
@@ -65,10 +67,10 @@ export const metadata: Metadata = {
 
     images: [
       {
-        url: "/branding/logo.png",
-        width: 1024,
-        height: 1024,
-        alt: "SOMNIA Logo",
+        url: "/branding/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "SOMNIA — Lucid Dreaming Training",
       },
     ],
 
@@ -80,12 +82,12 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
 
-    title: "SOMNIA",
+    title: "SOMNIA | Lucid Dreaming Training Platform",
 
     description:
-      "The all-in-one lucid dreaming platform.",
+      "Master lucid dreaming with structured training and dream journaling.",
 
-    images: ["/branding/logo.png"],
+    images: ["/branding/og-image.png"],
   },
 };
 export const viewport: Viewport = {
