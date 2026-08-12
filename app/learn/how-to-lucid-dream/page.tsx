@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
+import SomniaCTA from "@/components/seo/SomniaCTA";
 
 export const metadata: Metadata = {
   title: "How to Lucid Dream",
@@ -17,9 +18,10 @@ export default function HowToLucidDreamPage() {
   path="/learn/how-to-lucid-dream"
 />
       <article className="mx-auto max-w-4xl">
-        <h1 className="text-4xl font-bold">
-          How to Lucid Dream
-        </h1>
+        <SomniaCTA />
+        <p className="text-sm font-medium text-[#7C8CFF]">
+          SOMNIA LEARNING
+        </p>
 
         <p className="mt-6 text-lg leading-8 text-slate-300">
           Lucid dreaming is the ability to become aware that you are dreaming

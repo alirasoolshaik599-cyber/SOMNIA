@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
+import SomniaCTA from "@/components/seo/SomniaCTA";
 
 export const metadata: Metadata = {
   title: "Dream Journal Guide",
@@ -17,6 +18,7 @@ export default function DreamJournalPage() {
   path="/learn/dream-journal"
 />
       <article className="mx-auto max-w-4xl">
+        <SomniaCTA />
         <p className="text-sm font-medium text-[#7C8CFF]">
           SOMNIA LEARNING
         </p>

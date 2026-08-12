@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import SomniaCTA from "@/components/seo/SomniaCTA";
 
 const guides = [
   {
@@ -64,7 +65,13 @@ export default function LearnPage() {
 />
       
       <div className="mx-auto max-w-5xl">
-        <h1 className="text-4xl font-bold">Lucid Dreaming Guides</h1>
+        <SomniaCTA />
+        
+        <p className="text-sm font-medium text-[#7C8CFF]">
+          SOMNIA LEARNING
+        </p>
+
+        <h1 className="mt-3 text-4xl font-bold">Lucid Dreaming Guides</h1>
 
         <p className="mt-4 max-w-3xl text-slate-300">
           Explore practical guides to lucid dreaming, dream journaling, dream

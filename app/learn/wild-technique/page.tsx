@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
+import SomniaCTA from "@/components/seo/SomniaCTA";
 
 export const metadata: Metadata = {
   title: "WILD Technique for Lucid Dreaming",
@@ -18,6 +19,7 @@ export default function WildTechniquePage() {
 />
       <article className="mx-auto max-w-4xl">
         <p className="text-sm font-medium text-[#7C8CFF]">
+          <SomniaCTA />
           SOMNIA LEARNING
         </p>
 

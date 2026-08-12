@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
+import SomniaCTA from "@/components/seo/SomniaCTA";
 
 export const metadata: Metadata = {
   title: "Reality Checks for Lucid Dreaming",
@@ -17,6 +18,7 @@ export default function RealityChecksPage() {
   path="/learn/reality-checks"
 />
       <article className="mx-auto max-w-4xl">
+        <SomniaCTA />
         <p className="text-sm font-medium text-[#7C8CFF]">
           SOMNIA LEARNING
         </p>
