@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { getCurrentUser } from "./auth";
-import type { Dream } from "@/types/dream";
+import type { Dream, DreamAnalysis } from "@/types/dream";
 
 type NewDreamInput = {
   title: string;
@@ -28,6 +28,7 @@ export async function getDreamsFromDatabase(): Promise<Dream[]> {
     date: dream.dream_date,
     favorite: dream.favorite,
     tags: dream.tags ?? [],
+    analysis: (dream.analysis as DreamAnalysis | null) ?? null,
   }));
 }
 
@@ -60,6 +61,7 @@ export async function createDreamInDatabase(
     date: data.dream_date,
     favorite: data.favorite,
     tags: data.tags ?? [],
+    analysis: (data.analysis as DreamAnalysis | null) ?? null,
   };
 }
 

@@ -1,3 +1,11 @@
+export type DreamAnalysis = {
+  mood: string;
+  symbols: string[];
+  themes: string[];
+  lucidity: string;
+  reflection: string;
+};
+
 export type Dream = {
   id: string;
   title: string;
@@ -5,4 +13,5 @@ export type Dream = {
   date: string;
   favorite: boolean;
   tags: string[];
+  analysis?: DreamAnalysis | null;
 };

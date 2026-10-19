@@ -125,7 +125,7 @@ export default function DreamDetailPage() {
             <p className="mt-8 text-sm text-slate-400">{dream.date}</p>
           </div>
 
-          <DreamInsights />
+          <DreamInsights dreamId={dream.id} initialAnalysis={dream.analysis} />
         </div>
       </div>
 

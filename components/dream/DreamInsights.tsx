@@ -2,111 +2,96 @@
 
 import { useState } from "react";
 import Button from "@/components/ui/Button";
+import { supabase } from "@/lib/supabase";
+import type { DreamAnalysis } from "@/types/dream";
 
-type DreamAnalysis = {
-  mood: string;
-  symbols: string[];
-  themes: string[];
-  lucidity: string;
-  reflection: string;
+type Status = "idle" | "loading" | "done" | "error";
+
+type DreamInsightsProps = {
+  dreamId: string;
+  // Analysis already saved in the database (if any)
+  initialAnalysis?: DreamAnalysis | null;
 };
 
-// Mock analysis presets. Swap getRandomAnalysis() for a real API call later —
-// every card and the animation below stay unchanged as long as the shape matches.
-const mockAnalyses: DreamAnalysis[] = [
-  {
-    mood: "Curious & Adventurous",
-    symbols: ["Ocean", "Flying", "Stars"],
-    themes: ["Freedom", "Exploration", "Self Discovery"],
-    lucidity: "Low",
-    reflection:
-      "This dream may represent a desire for freedom, exploration, and discovering new possibilities.",
-  },
-  {
-    mood: "Calm & Reflective",
-    symbols: ["Water", "Moonlight", "Old House"],
-    themes: ["Memory", "Nostalgia", "Letting Go"],
-    lucidity: "Moderate",
-    reflection:
-      "This dream may reflect a quiet processing of the past, and a search for comfort in familiar places.",
-  },
-  {
-    mood: "Anxious & Alert",
-    symbols: ["Chase", "Locked Door", "Falling"],
-    themes: ["Uncertainty", "Control", "Avoidance"],
-    lucidity: "Low",
-    reflection:
-      "This dream may point to unresolved tension or a feeling of being pursued by pressures in waking life.",
-  },
-  {
-    mood: "Joyful & Light",
-    symbols: ["Sunlight", "Reunion", "Music"],
-    themes: ["Connection", "Celebration", "Belonging"],
-    lucidity: "High",
-    reflection:
-      "This dream may signal a deep appreciation for the people and moments that bring you a sense of belonging.",
-  },
-  {
-    mood: "Mysterious & Introspective",
-    symbols: ["Mirror", "Fog", "Maze"],
-    themes: ["Identity", "Self-Reflection", "Hidden Truths"],
-    lucidity: "Moderate",
-    reflection:
-      "This dream may suggest you're working through questions about who you are and what you're searching for.",
-  },
-];
+export default function DreamInsights({
+  dreamId,
+  initialAnalysis = null,
+}: DreamInsightsProps) {
+  const [status, setStatus] = useState<Status>(
+    initialAnalysis ? "done" : "idle"
+  );
+  const [analysis, setAnalysis] = useState<DreamAnalysis | null>(
+    initialAnalysis
+  );
+  // Saved results show instantly; only fresh results fade in.
+  const [visible, setVisible] = useState(Boolean(initialAnalysis));
+  const [errorMessage, setErrorMessage] = useState("");
 
-function getRandomAnalysis(exclude?: DreamAnalysis): DreamAnalysis {
-  const options = exclude
-    ? mockAnalyses.filter((a) => a !== exclude)
-    : mockAnalyses;
-  return options[Math.floor(Math.random() * options.length)];
-}
-
-type Status = "idle" | "loading" | "done";
-
-export default function DreamInsights() {
-  const [status, setStatus] = useState<Status>("idle");
-  const [analysis, setAnalysis] = useState<DreamAnalysis | null>(null);
-  const [visible, setVisible] = useState(false);
-
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     setStatus("loading");
     setVisible(false);
+    setErrorMessage("");
 
-    setTimeout(() => {
-      const next = getRandomAnalysis(analysis ?? undefined);
-      setAnalysis(next);
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        throw new Error("Please sign in to analyze your dreams.");
+      }
+
+      const res = await fetch("/api/analyze-dream", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ dreamId }),
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error ?? "Couldn't analyze this dream.");
+      }
+
+      const data: DreamAnalysis = await res.json();
+      setAnalysis(data);
       setStatus("done");
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => setVisible(true));
       });
-    }, 2500);
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "Couldn't analyze this dream."
+      );
+      setStatus("error");
+    }
   };
+
+  const result = status === "done" ? analysis : null;
 
   const cards = [
     {
       icon: "🎭",
       title: "Mood",
-      content: status === "done" && analysis ? analysis.mood : "Not analyzed yet.",
+      content: result ? result.mood : "Not analyzed yet.",
     },
     {
       icon: "🔑",
       title: "Symbols",
-      content:
-        status === "done" && analysis ? analysis.symbols.join(", ") : "Not analyzed yet.",
+      content: result ? result.symbols.join(", ") : "Not analyzed yet.",
     },
     {
       icon: "🧵",
       title: "Themes",
-      content:
-        status === "done" && analysis ? analysis.themes.join(", ") : "Not analyzed yet.",
+      content: result ? result.themes.join(", ") : "Not analyzed yet.",
     },
     {
       icon: "💫",
       title: "Lucidity",
-      content: status === "done" && analysis ? analysis.lucidity : "Not analyzed yet.",
+      content: result ? result.lucidity : "Not analyzed yet.",
     },
   ];
 
@@ -120,7 +105,7 @@ export default function DreamInsights() {
             key={card.title}
             className="rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-md shadow-[0_0_25px_rgba(0,0,0,0.25)] transition-all duration-500 hover:scale-[1.02] hover:border-[#5B6EFF]/30 hover:shadow-[0_0_35px_rgba(91,110,255,0.25)]"
             style={
-              status === "done"
+              result
                 ? {
                     opacity: visible ? 1 : 0,
                     transform: visible ? "translateY(0)" : "translateY(8px)",
@@ -144,7 +129,7 @@ export default function DreamInsights() {
       </div>
 
       {/* AI Reflection */}
-      {status === "done" && analysis && (
+      {result && (
         <div
           className="mt-4 rounded-3xl border border-[#5B6EFF]/20 bg-[#5B6EFF]/10 p-6 backdrop-blur-md transition-all duration-500"
           style={{
@@ -157,15 +142,21 @@ export default function DreamInsights() {
             <span className="text-2xl leading-none">🪞</span>
             <h3 className="text-lg font-semibold text-white">AI Reflection</h3>
           </div>
-          <p className="mt-3 text-sm leading-6 text-slate-300">{analysis.reflection}</p>
+          <p className="mt-3 text-sm leading-6 text-slate-300">
+            {result.reflection}
+          </p>
         </div>
       )}
 
       <div className="mt-8 flex flex-col items-center gap-4">
+        {status === "error" && (
+          <p className="text-center text-sm text-red-400">{errorMessage}</p>
+        )}
+
         <Button onClick={handleAnalyze} disabled={status === "loading"}>
           {status === "loading"
             ? "Analyzing..."
-            : status === "done"
+            : analysis
             ? "✨ Re-Analyze Dream"
             : "✨ Analyze Dream"}
         </Button>
